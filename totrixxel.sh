@@ -79,9 +79,21 @@ function init_program() {
         fi
     fi
 }
+
+#Cargar Prefabricados
+function charge_prefabs() {
+    mv -r prefabs /usr/bin/
+    init_program
+}
+
 if [ $usuario != "root" ]
 then
     echo -e "[-] Es necesario ejecutar Totrixxel como super-usuario (root)"
 else
-    init_program
+    if [ -d /usr/bin/prefabs ]
+    then
+        init_program
+    else
+        charge_prefabs
+    fi
 fi
