@@ -1,18 +1,19 @@
 #!/bin/bash
 #Variables
-usuario=$(whoami)
+root_verify=$(whoami)
+usuario=$(users)
 
 #Programa
 function init_program() {
     echo -e "Bienvenido a Totrixxel..."
     echo -e "Que quieres hacer?"
-    echo -e "[1] Montar pagina local      [2] Descargar prefabs (git)\n[3] Iniciar pagina local    [4] NetCat"; read qaction
+    echo -e "[1] Montar pagina local      [2] Descargar prefabs (git)\n[3] Iniciar pagina local     [4] NetCat"; read qaction
     if [ $qaction == "1" ]
     then
         echo -e "Tienes una pagina?[y/n] >> "; read qpagexist
         if [ $qpagexist == "y" ]
         then
-            echo -e "[*] Info: Ej: /home/$usuario/Descargas/prepag/"
+            echo -e "[*] Info: Ej: /home/$usuario/Descargas/prefabs/"
             echo -e "Ruta completa de la pagina >> "; read pagdir
             rm -r /var/www/html
             mkdir /var/www/html
@@ -20,13 +21,13 @@ function init_program() {
         elif [ $qpagexist == "n" ]
         then
             echo -e "Selecciona un prefab"
-            echo -e "[0] Txx Info    [2] Downloader Page\n[3] "; read qprefabpag
-            if [ $qprefabpag == "1" ]
+            echo -e "[0] Txx Info    [1] Downloader Page\n"; read qprefabpag
+            if [ $qprefabpag == "0" ]
             then
             	rm -r /var/www/html
             	mkdir /var/www/html
             	cp /prefabs/txx/* /var/www/html
-            elif [ $qprefabpag == "2" ]
+            elif [ $qprefabpag == "1" ]
             then
                 rm -r /var/www/html/
                 mkdir /var/www/html/
@@ -56,6 +57,9 @@ function init_program() {
     then
         echo -e "Creador del repo"; read repouser
         echo -e "\nNombre del repo";read reponame
+        rm -r /var/www/html
+        mkdir /var/www/html
+        cd /var/www/html
     	git clone https://www.github.com/$repouser/$reponame
     elif [ $qaction == "3" ]
     then
@@ -70,7 +74,7 @@ function init_program() {
         echo -e "[1] Chat    [2] Reverse Shell"; read qncaction
         if [ $qncaction == "1" ]
         then
-            echo -e "[*] Creadno chat en el puerto: 70450..."
+            echo -e "[*] Creando chat en el puerto: 70450..."
             netcat -lp 70450
         elif [ $qncaction == "2" ]
         then
@@ -82,11 +86,13 @@ function init_program() {
 
 #Cargar Prefabricados
 function charge_prefabs() {
-    mv -r prefabs /usr/bin/
+    cp totrixxel.sh /usr/bin/
+    mv /usr/bin/totrixxel.sh /usr/bin/totrixxel
+    cp -r prefabs /usr/bin/
     init_program
 }
 
-if [ $usuario != "root" ]
+if [ $root_verify != "root" ]
 then
     echo -e "[-] Es necesario ejecutar Totrixxel como super-usuario (root)"
 else
